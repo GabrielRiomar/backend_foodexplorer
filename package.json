@@ -1,0 +1,19 @@
+{
+  "name": "backend_rocketfoods",
+  "version": "1.0.0",
+  "description": "Backend para o Desafio Final do Explorer na RocketSeat",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "dev": "nodemon ./src/server.js"
+  },
+  "keywords": [],
+  "author": "Gabriel Riomar Lopes",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.22"
+  }
+}

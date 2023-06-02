@@ -23,6 +23,7 @@ class DishesController {
       const filteredIngredients = ingredients
         .split(',')
         .map(ingredient => ingredient.trim())
+
       dishes = await knex('ingredients')
         .select([
           'dishes.id',
@@ -56,5 +57,4 @@ class DishesController {
   }
 }
 
-// Exportando
 module.exports = DishesController

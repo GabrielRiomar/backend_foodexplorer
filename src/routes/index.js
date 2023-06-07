@@ -10,7 +10,7 @@ const routes = Router()
 
 routes.use('/users', usersRoutes)
 routes.use('/dishes', dishesRoutes)
-routes.use('/management', dishesManagerRoutes)
+routes.use('/manager', dishesManagerRoutes)
 routes.use('/ingredients', ingredientsRoutes)
 routes.use('/sessions', sessionsRoutes)
 

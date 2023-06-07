@@ -2,13 +2,11 @@ const knex = require('../database/knex')
 const { hash, compare } = require('bcryptjs')
 const AppError = require('../utils/AppError')
 
-const sqliteConnection = require('../database/sqlite')
-
 class UsersController {
   async create(request, response) {
     const { name, email, password } = request.body
 
-    const database = await sqliteConnection()
+    // const database = await sqliteConnection()
 
     const checkUserExists = await knex('users').where('email', email).first()
 
@@ -38,7 +36,9 @@ class UsersController {
       throw new AppError('User not found.', 401)
     }
 
-    const userWithUpdatedEmail = await knex('users').where('email', email)
+    const userWithUpdatedEmail = await knex('users')
+      .where('email', email)
+      .first()
 
     if (userWithUpdatedEmail && userWithUpdatedEmail.id !== user.id) {
       throw new AppError('E-mail already on use.', 401)
@@ -61,16 +61,14 @@ class UsersController {
       user.password = await hash(password, 8)
     }
 
-    await database.run(
-      `
-    UPDATE users SET
-    name = ?,
-    email = ?,
-    password = ?,
-    updated_at = DATETIME('NOW')
-    WHERE id = ?`,
-      [user.name, user.email, user.password, user_id]
-    )
+    await knex('users')
+      .where('id', user_id)
+      .update({
+        name: user.name,
+        email: user.email,
+        password: user.password,
+        updated_at: knex.raw("DATETIME('NOW')")
+      })
     return response.status(200).json()
   }
 }

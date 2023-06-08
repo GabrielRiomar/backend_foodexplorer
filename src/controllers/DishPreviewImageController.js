@@ -5,6 +5,7 @@ const DiskStorage = require('../providers/DiskStorage')
 class DishPreviewImageController {
   async update(request, response) {
     const { id } = request.params
+
     const previewImgFilename = request.file.filename
 
     const diskStorage = new DiskStorage()
@@ -24,6 +25,7 @@ class DishPreviewImageController {
 
     const filename = await diskStorage.saveFile(previewImgFilename)
     dish.preview_img = filename
+
     await knex('dishes').update(dish).where({ id })
 
     return response.json(dish)

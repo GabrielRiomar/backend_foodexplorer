@@ -1,7 +1,10 @@
 //Import path to use __dirname
 const path = require('path')
-//Import multer
+
+//Import multer library for upload
 const multer = require('multer')
+
+//Import crypto to create hash names
 const crypto = require('crypto')
 
 //Variable to create folder to place temporary files

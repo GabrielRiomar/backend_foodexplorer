@@ -12,11 +12,18 @@ class DishesManagerController {
       throw new AppError('Dish name already on use.', 401)
     }
 
+    const previewImgFilename = request.file.filename
+
+    const diskStorage = new DiskStorage()
+
+    const filename = await diskStorage.saveFile(previewImgFilename)
+
     const [dish_id] = await knex('dishes').insert({
       name,
       category,
       price,
-      description
+      description,
+      preview_img: filename
     })
 
     const ingredientsInsert = ingredients.map(ingredient => {
@@ -35,10 +42,9 @@ class DishesManagerController {
     const { name, category, price, description, preview_img } = request.body
     const { id } = request.params
 
-    // Requesting image filename
-    const previewFileName = request.file.filename
-
-    // Instantiating diskStorage
+    // Pegando o nome do arquivo
+    const dishFilename = request.file.filename
+    // Instanciando o diskstorage
     const diskStorage = new DiskStorage()
 
     const dish = await knex('dishes').where({ id }).first()
@@ -52,13 +58,14 @@ class DishesManagerController {
       await diskStorage.deleteFile(dish.preview_img)
     }
 
-    const previewName = await diskStorage.saveFile(previewFileName)
+    // Caso ainda não exista
+    const filename = await diskStorage.saveFile(dishFilename)
 
     dish.name = name ?? dish.name
     dish.category = category ?? dish.category
     dish.price = price ?? dish.price
     dish.description = description ?? dish.description
-    dish.preview_img = preview_img ?? previewName
+    dish.preview_img = preview_img ?? dish.preview_img
 
     await knex('dishes')
       .where({ id })

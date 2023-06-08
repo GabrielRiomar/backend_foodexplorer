@@ -3,9 +3,12 @@ const express = require('express')
 const database = require('./database/sqlite')
 const AppError = require('./utils/AppError')
 const routes = require('./routes')
+//Import cors to recieve FrontEnd requisitions
+const cors = require('cors')
 
 const app = express()
 app.use(express.json())
+app.use(cors())
 app.use(routes)
 
 database()

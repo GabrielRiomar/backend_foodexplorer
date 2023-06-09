@@ -6,12 +6,16 @@ class UsersController {
   async create(request, response) {
     const { name, email, password } = request.body
 
-    // const database = await sqliteConnection()
-
+    // Check if user email already exists in the database
     const checkUserExists = await knex('users').where('email', email).first()
 
     if (checkUserExists) {
-      throw new AppError('E-mail already on use.', 401)
+      throw new AppError('E-mail already in use.', 401)
+    }
+
+    //Check if password meets the minimum length requirement
+    if (password.length < 6) {
+      throw new AppError('Password should have a minimum of 6 characters.', 400)
     }
 
     const hashedPassword = await hash(password, 8)

@@ -6,7 +6,7 @@ class DishPreviewImageController {
   async update(request, response) {
     const { id } = request.params
 
-    const previewImgFilename = request.file.filename
+    const imageFilename = request.file.filename
 
     const diskStorage = new DiskStorage()
 
@@ -19,12 +19,12 @@ class DishPreviewImageController {
       )
     }
 
-    if (dish.preview_img) {
-      await diskStorage.deleteFile(dish.preview_img)
+    if (dish.image) {
+      await diskStorage.deleteFile(dish.image)
     }
 
-    const filename = await diskStorage.saveFile(previewImgFilename)
-    dish.preview_img = filename
+    const filename = await diskStorage.saveFile(imageFilename)
+    dish.image = filename
 
     await knex('dishes').update(dish).where({ id })
 

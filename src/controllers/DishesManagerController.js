@@ -12,26 +12,31 @@ class DishesManagerController {
       throw new AppError('Dish name already on use.', 401)
     }
 
-    const previewImgFilename = request.file.filename
+    const image = request.file.filename
 
     const diskStorage = new DiskStorage()
 
-    const filename = await diskStorage.saveFile(previewImgFilename)
+    const imageFile = await diskStorage.saveFile(image)
 
-    const [dish_id] = await knex('dishes').insert({
+    const dish_id = await knex('dishes').insert({
       name,
       category,
       price,
       description,
-      preview_img: filename
+      image: imageFile
     })
 
-    const ingredientsInsert = ingredients.map(ingredient => {
-      return {
-        dish_id,
-        name: ingredient
-      }
-    })
+    const hasOnlyOneIngredient = typeof ingredients === 'string'
+
+    const ingredientsInsert = hasOnlyOneIngredient
+      ? {
+          name: ingredients,
+          dish_id
+        }
+      : ingredients.map(ingredient => ({
+          name: ingredient,
+          dish_id
+        }))
 
     await knex('ingredients').insert(ingredientsInsert)
 
@@ -39,7 +44,7 @@ class DishesManagerController {
   }
 
   async update(request, response) {
-    const { name, category, price, description, preview_img } = request.body
+    const { name, category, price, description, image } = request.body
     const { id } = request.params
 
     // Pegando o nome do arquivo
@@ -54,8 +59,8 @@ class DishesManagerController {
     }
 
     // Deleting the old image if a new image is uploaded and saving the new image
-    if (dish.preview_img) {
-      await diskStorage.deleteFile(dish.preview_img)
+    if (dish.image) {
+      await diskStorage.deleteFile(dish.image)
     }
 
     // Caso ainda não exista
@@ -65,7 +70,7 @@ class DishesManagerController {
     dish.category = category ?? dish.category
     dish.price = price ?? dish.price
     dish.description = description ?? dish.description
-    dish.preview_img = preview_img ?? dish.preview_img
+    dish.image = image ?? dish.image
 
     await knex('dishes')
       .where({ id })
@@ -74,7 +79,7 @@ class DishesManagerController {
         category: dish.category,
         price: dish.price,
         description: dish.description,
-        preview_img: dish.preview_img,
+        image: dish.image,
         updated_at: knex.raw("DATETIME('NOW')")
       })
 

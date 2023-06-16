@@ -22,6 +22,7 @@ const dishPreviewImageController = new DishPreviewImageController()
 
 //Using middleware for every route bellow
 dishesRoutes.use(ensureAuthenticated)
+
 //Dishes routes
 dishesRoutes.get('/', dishesController.index)
 dishesRoutes.get('/:id', dishesController.show)

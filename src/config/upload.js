@@ -9,6 +9,7 @@ const crypto = require('crypto')
 
 //Variable to create folder to place temporary files
 const TMP_FOLDER = path.resolve(__dirname, '..', '..', 'tmp')
+
 //Variable to create folder to place files
 const UPLOAD_FOLDER = path.resolve(TMP_FOLDER, 'upload')
 

@@ -1,17 +1,38 @@
 //Import express Router
 const { Router } = require('express')
+
 //Import controllers
 const DishesController = require('../controllers/DishesController')
+const DishPreviewImageController = require('../controllers/DishPreviewImageController')
+
 //Import middlewares
 const ensureAuthenticated = require('../middlewares/ensureAuthenticated')
+
+//Import Multer and config for image upload
+const multer = require('multer')
+const uploadConfig = require('../config/upload')
+
+//Variable for upload
+const upload = multer(uploadConfig.MULTER)
+
 //Creating instance for Dishes
 const dishesRoutes = Router()
 const dishesController = new DishesController()
+const dishPreviewImageController = new DishPreviewImageController()
 
 //Using middleware for every route bellow
 dishesRoutes.use(ensureAuthenticated)
 //Dishes routes
 dishesRoutes.get('/', dishesController.index)
 dishesRoutes.get('/:id', dishesController.show)
+dishesRoutes.post('/', upload.single('image'), dishesController.create)
+dishesRoutes.put('/:id', dishesController.update)
+dishesRoutes.delete('/:id', dishesController.delete)
+dishesRoutes.patch(
+  '/:id',
+  ensureAuthenticated,
+  upload.single('image'),
+  dishPreviewImageController.update
+)
 
 module.exports = dishesRoutes

@@ -44,12 +44,10 @@ class DishesManagerController {
   }
 
   async update(request, response) {
-    const { name, category, price, description, image } = request.body
+    const { name, category, price, description, ingredients } = request.body
     const { id } = request.params
 
-    // Pegando o nome do arquivo
-    const dishFilename = request.file.filename
-    // Instanciando o diskstorage
+    const image = request.file ? request.file.filename : null
     const diskStorage = new DiskStorage()
 
     const dish = await knex('dishes').where({ id }).first()

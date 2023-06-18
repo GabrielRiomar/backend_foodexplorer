@@ -43,10 +43,13 @@ class DishesController {
   }
 
   async update(request, response) {
-    const { name, category, price, description, ingredients } = request.body
+    const { name, category, price, description, ingredients, image } =
+      request.body
     const { id } = request.params
 
-    const image = request.file ? request.file.filename : null
+    // const image = request.file ? request.file.filename : null
+    const imageFileName = request.file.filename
+
     const diskStorage = new DiskStorage()
 
     const dish = await knex('dishes').where({ id }).first()
@@ -61,13 +64,13 @@ class DishesController {
     }
 
     // Caso ainda não exista
-    const filename = await diskStorage.saveFile(dishFilename)
+    const filename = await diskStorage.saveFile(imageFileName)
 
     dish.name = name ?? dish.name
     dish.category = category ?? dish.category
     dish.price = price ?? dish.price
     dish.description = description ?? dish.description
-    dish.image = image ?? dish.image
+    dish.image = image ?? filename
 
     await knex('dishes')
       .where({ id })
@@ -79,6 +82,16 @@ class DishesController {
         image: dish.image,
         updated_at: knex.raw("DATETIME('NOW')")
       })
+
+    ingredientsInsert = ingredients.map(ingredient => {
+      return {
+        dish_id: dish.id,
+        name: ingredient
+      }
+    })
+
+    await knex('ingredients').where({ dish_id: id }).delete()
+    await knex('ingredients').where({ dish_id: id }).insert(ingredientsInsert)
 
     return response.status(200).json()
   }

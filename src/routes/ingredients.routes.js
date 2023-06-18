@@ -1,8 +1,14 @@
+//Import express Router
 const { Router } = require('express')
-const IngredientsController = require('../controllers/IngredientsController')
-const ingredientsRoutes = Router()
-const ingredientsController = new IngredientsController()
 
+//Import controllers
+const IngredientsController = require('../controllers/IngredientsController')
+
+//Creating instance for Ingredients
+const ingredientsController = new IngredientsController()
+const ingredientsRoutes = Router()
+
+//Ingredients routes
 ingredientsRoutes.get('/:dish_id', ingredientsController.index)
 
 module.exports = ingredientsRoutes

@@ -6,7 +6,7 @@ const AppError = require('./utils/AppError')
 const routes = require('./routes')
 const uploadConfig = require('./config/upload')
 
-//Import cors to recieve FrontEnd requisitions
+//Import cors to receive FrontEnd requisitions
 const cors = require('cors')
 
 const app = express()

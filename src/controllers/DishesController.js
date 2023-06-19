@@ -43,55 +43,43 @@ class DishesController {
   }
 
   async update(request, response) {
-    const { name, category, price, description, ingredients, image } =
-      request.body
+    const { name, category, price, description, ingredients } = request.body
     const { id } = request.params
-
-    // const image = request.file ? request.file.filename : null
-    const imageFileName = request.file.filename
+    const imageFile = request.file
 
     const diskStorage = new DiskStorage()
 
     const dish = await knex('dishes').where({ id }).first()
 
     if (!dish) {
-      throw new AppError("Dish doesn't exists or not found", 401)
+      throw new AppError("Dish doesn't exist or not found", 401)
     }
 
-    // Deleting the old image if a new image is uploaded and saving the new image
+    // Deletando a imagem antiga se uma nova imagem for enviada e salvando a nova imagem
     if (dish.image) {
       await diskStorage.deleteFile(dish.image)
     }
 
-    // Caso ainda não exista
-    const filename = await diskStorage.saveFile(imageFileName)
+    let imageFileName
+    if (imageFile) {
+      imageFileName = await diskStorage.saveFile(imageFile.filename)
+      dish.image = imageFileName
+    }
 
-    dish.name = name ?? dish.name
-    dish.category = category ?? dish.category
-    dish.price = price ?? dish.price
-    dish.description = description ?? dish.description
-    dish.image = image ?? filename
+    dish.name = name || dish.name
+    dish.category = category || dish.category
+    dish.price = price || dish.price
+    dish.description = description || dish.description
 
-    await knex('dishes')
-      .where({ id })
-      .update({
-        name: dish.name,
-        category: dish.category,
-        price: dish.price,
-        description: dish.description,
-        image: dish.image,
-        updated_at: knex.raw("DATETIME('NOW')")
-      })
+    await knex('dishes').where({ id }).update(dish)
 
-    ingredientsInsert = ingredients.map(ingredient => {
-      return {
-        dish_id: dish.id,
-        name: ingredient
-      }
-    })
+    const ingredientsInsert = ingredients.map(ingredient => ({
+      dish_id: dish.id,
+      name: ingredient
+    }))
 
     await knex('ingredients').where({ dish_id: id }).delete()
-    await knex('ingredients').where({ dish_id: id }).insert(ingredientsInsert)
+    await knex('ingredients').insert(ingredientsInsert)
 
     return response.status(200).json()
   }

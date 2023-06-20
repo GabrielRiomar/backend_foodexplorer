@@ -23,52 +23,32 @@ The administrator has access to create, edit, and delete dishes. New users need 
 - sqlite
 - sqlite3
 
-## Como utilizar
+## How to use
 
 Clone o projeto para o local desejado em seu computador.
 
 ```bash
-git clone https://github.com/GomidesTs/food-explorer-back-end.git
+git clone https://github.com/GabrielRiomar/backend_foodexplorer.git
 ```
 
-Execute o back-end
+Execute
 
 ```bash
-# Na raiz do projeto renomeie o arquivo .env.example para .env e insira uma porta para a aplicação rodar e um secret para utilizar o jwt no projeto
+# Config the .env using the example
 PORT =
 AUTH_SECRET =
 
-# Navegue até o diretório do back-end
-cd food-explorer-backend
-
-# Instale as dependências necessárias
+# Install dependencies
 npm install
 
-# Agora inicie o servidor do BackEnd
+# And then start the developer env
 npm run dev
 
-# O terminal irá exibir a frase 'Server is running on Port' e a porta onde a aplicação está sendo executada.
-# Server is running on Port {PORT definida no arquivo .env}
 ```
 
-## Veja o resultado final
+[Food Explorer Deployed](https://food-explorer-grl.netlify.app/)
 
-Você observará a união desse repositório com o [front-end](https://github.com/GomidesTs/food-explorer-front-end), crie uma conta e desfrute da aplicação.
+The server of this project has been hosted on Render, a free hosting service.
+So it's important to point it out since being hosted on a free service, the back-end goes into a hibernation state after 15 minutes of inactivity. If a user tries to access the site and the back-end doesn't respond, it's necessary to wait for a moment as it will be "reinitializing" the services. This process can take up to 1 minute, depending on the server load on Render.
 
-### Quer ver como a aplicação funciona vista pelo administrador? Use a conta a seguir
-
-`e-mail: admin@foodexplorer.com` `senha: rocketseat`
-
-O servidor deste projeto foi hospedado no [Render](https://render.com/), um serviço de hospedagem gratuito. É importante ressaltar que, por estar hospedado em um serviço gratuito, o back-end entra em estado de hibernação após 15 minutos sem utilização. Caso o usuário tente acessar o site e o back-end não responda, é necessário aguardar um pouco, pois ele estará "inicializando" os serviços novamente. Essa etapa pode levar até 1 minuto, dependendo da carga nos servidores do Render. É importante destacar que esse tempo de inicialização pode afetar o desempenho da aplicação, especialmente em períodos de alta demanda.
-
-Por outro lado, o front-end foi hospedado na plataforma [Netlify](https://www.netlify.com/), que permite hospedar sites e aplicativos web de forma gratuita. Para que o front-end funcione corretamente, é fundamental que o servidor de back-end esteja em funcionamento e respondendo corretamente. Caso contrário, o front-end pode apresentar erros ou comportamentos inesperados.
-
-[O resultado FINAL pode ser visto aqui](https://delicate-belekoy-60cb5c.netlify.app/)
-
-## Executando Testes
-
-Para executar testes, execute o seguinte comando
-
-```bash
-npm run test
-```
+On the other hand, the front-end has been hosted on the Netlify platform, which allows hosting websites and web applications for free. For the front-end to work correctly, it's crucial that the back-end server is up and running and responding correctly. Otherwise, the front-end may display errors or unexpected behavior.
